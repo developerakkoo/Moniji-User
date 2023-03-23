@@ -1,0 +1,53 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Profile</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="folder/Home"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+<form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+  <ion-item>
+    <ion-label position="floating">E-Mail <ion-text color="danger">*</ion-text></ion-label>
+    <ion-input required formControlName="email" type="text"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label position="floating">Password <ion-text color="danger">*</ion-text></ion-label>
+    <ion-input required formControlName="password" type="text"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label position="floating">Full Name <ion-text color="danger">*</ion-text></ion-label>
+    <ion-input required formControlName="name" type="text"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label position="floating">Address <ion-text color="danger">*</ion-text></ion-label>
+    <ion-input required formControlName="address" type="text"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label position="floating">GST No <ion-text color="danger">*</ion-text></ion-label>
+    <ion-input required formControlName="gst" type="text"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label position="floating">Company <ion-text color="danger">*</ion-text></ion-label>
+    <ion-input required formControlName="company" type="text"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label position="floating">Mobile No <ion-text color="danger">*</ion-text></ion-label>
+    <ion-input required formControlName="mobile" type="text"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label position="floating">City <ion-text color="danger">*</ion-text></ion-label>
+    <ion-input required formControlName="city" type="text"></ion-input>
+  </ion-item>
+
+</form>
+</ion-content>
+<ion-footer>
+  <ion-toolbar color="primary">
+    <ion-button style="color: white;" [disabled]="profileForm.invalid" (click)="onSubmit()" expand="full" fill="clear">
+      Save
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>

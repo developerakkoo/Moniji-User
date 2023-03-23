@@ -1,5 +1,7 @@
 {
   "name": "Moniji-User",
-  "integrations": {},
+  "integrations": {
+    "capacitor": {}
+  },
   "type": "angular"
 }

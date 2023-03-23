@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Completed Orders</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="folder/Home"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-list-header>
+      <ion-label>All Completed Orders</ion-label>
+    </ion-list-header>
+    <ion-item *ngFor="let item of order">
+      <ion-avatar slot="start">
+        <img [src]="item.image" />
+      </ion-avatar>
+      <ion-label>
+        <p> <strong>Title</strong> {{item.title}} </p>
+        <p> <strong>Price</strong> {{item.price | currency:"INR"}} </p>
+        <p> <strong>Status</strong> {{item.status}} </p>
+      </ion-label>
+      <ion-button (click)="delete()">
+        <ion-icon slot="icon-only" name="trash"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </ion-list>
+
+
+
+</ion-content>

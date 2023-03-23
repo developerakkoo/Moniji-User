@@ -7,15 +7,42 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" class="ion-no-margin">
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">{{ folder }}</ion-title>
     </ion-toolbar>
   </ion-header>
 
-  <div id="container">
-    <strong class="capitalize">{{ folder }}</strong>
-    <p>Explore <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
+
+  <ion-list-header>
+    <ion-label>Select a Make to place Order</ion-label>
+  </ion-list-header>
+  <ion-card class="card">
+    <ion-card-header>
+      <ion-card-subtitle>German Make</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-img src="https://www.shutterstock.com/image-illustration/metal-rod-600w-321062312.jpg"></ion-img>
+
+      <ion-button expand="block"  (click)="makeSelectHandler('german')">
+        <ion-icon slot="end" name="arrow-forward"></ion-icon>
+          Continue
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card class="card">
+    <ion-card-header>
+      <ion-card-subtitle>China Make</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-img src="https://www.shutterstock.com/image-illustration/metal-rod-600w-321062312.jpg"></ion-img>
+      <ion-button expand="block" (click)="makeSelectHandler('china')">
+        <ion-icon slot="end" name="arrow-forward"></ion-icon>
+        Continue
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
 </ion-content>

@@ -1,0 +1,62 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Place China Order</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="folder/Home"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="orderForm" (ngSubmit)="onSubmit()">
+    
+    <ion-item>
+      <ion-label>Item</ion-label>
+      <ion-select formControlName="item" formControlName="type" (ionChange)="itemEvent($event)" value="Solid" placeholder="Select Item">
+        <ion-select-option *ngFor="let item of itemArray"  [value]="item"> {{item}} </ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>Type</ion-label>
+      <ion-select formControlName="type" (ionChange)="typeEvent($event)" value="ground" placeholder="Select Type">
+        <ion-select-option  value="ground">Ground</ion-select-option>
+        <ion-select-option value="unground">Unground</ion-select-option>
+      </ion-select>
+    </ion-item>
+  
+    <ion-item>
+      <ion-label>Diameter</ion-label>
+      <ion-select formControlName="diameter" (ionChange)="diameterEvent($event)" [value]="3" multiple="false" placeholder="Select Diameter">
+        <ion-select-option *ngFor="let d of diameterArray" [value]="d"> {{d}}mm </ion-select-option>
+      </ion-select>
+    </ion-item>
+  
+    <ion-item >
+      <ion-label>Length</ion-label>
+      <ion-select formControlName="length" (ionChange)="lengthEvent($event)" [value]="length" multiple="false" placeholder="Select Length">
+        <ion-select-option *ngFor="let d of lengthArray" [value]="d"> {{d}}mm </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item [disabled]="!isSmallDiaButtonActive">
+      <ion-label>Small Diameter</ion-label>
+      <ion-input formControlName="smallDia" type="number" ></ion-input>
+    </ion-item>
+  
+    <ion-item>
+      <ion-label>Quantity</ion-label>
+      <ion-input formControlName="quantity" type="number" ></ion-input>
+    </ion-item>
+    <!-- <ion-button block color="primary" type="submit" [disabled]="orderForm.invalid">
+      Login
+    </ion-button> -->
+  </form>
+ 
+</ion-content>
+<ion-footer>
+  <ion-toolbar color="primary">
+    <ion-button style="color: white;" [disabled]="orderForm.invalid" (click)="onSubmit()" expand="full" fill="clear">
+      Place
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>
