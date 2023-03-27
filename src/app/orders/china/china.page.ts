@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { Database } from '@angular/fire/database';
+import { addDoc, collection, Firestore } from '@angular/fire/firestore';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-
+import { AlertController } from '@ionic/angular';
+import * as  moment from 'moment';
+import { DataService } from 'src/app/data.service';
 @Component({
   selector: 'app-china',
   templateUrl: './china.page.html',
@@ -35,9 +39,16 @@ export class ChinaPage implements OnInit {
     245,250,255,260,265,270,275,280,285,290,295,300,
     305,310,315,320,325,330
   ];
+  todaysDate!: any;
+  userDbKey!:string;
+  userId!:string;
   length:number = 50;
   isSmallDiaButtonActive:boolean = false;
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,
+    private db: Database,
+    private firstore: Firestore,
+    private alertController: AlertController,
+    private data: DataService,) {
     this.orderForm = this.fb.group({
       item:[],
       smallDia:[],
@@ -48,12 +59,72 @@ export class ChinaPage implements OnInit {
     })
    }
 
-  ngOnInit() {
+   async ngOnInit() {
+    this.userDbKey = await this.data.get("userKey");
+    this.userId = await this.data.get("userId");
+    console.log(`USer Database ref key ${this.userDbKey}`);
+    console.log(moment().format("YYYY/MM/DD"));
+    this.todaysDate = moment().format("YYYY/MM/DD");
+    
+      
   }
-
   onSubmit(){
     console.log(this.orderForm.value);
+    this.presentAlertConfirm("Confirm", "", "Do you want to place the order", "Yes");
     
+    
+  }
+
+  async presentAlertConfirm(header: string, handler:any, msg: string, buttonText: string) {
+    const alert = await this.alertController.create({
+      header: header,
+      message: msg,
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+            console.log('Confirm Cancel: blah');
+          }
+        }, {
+          text: buttonText,
+          handler: () =>{
+            console.log("Yes");
+            let obj = {
+              userKey: this.userDbKey,
+              userId: this.userId,
+              type: this.orderForm.value.type,
+              diameter: this.orderForm.value.diameter,
+              length: this.orderForm.value.length,
+              quantity: this.orderForm.value.quantity,
+              status: 1,
+              orderId: 0o000,
+              date: this.todaysDate,
+              item: this.orderForm.value.item || "",
+              smallDiameter: this.orderForm.value.smallDia || "",
+              make: "China"
+
+            }
+
+            addDoc(collection(this.firstore, `Orders`), obj)
+            .then((success) =>{
+              console.log(success);
+              
+            }).catch((error) =>{
+              console.log(error);
+              
+            })
+            // set(ref(this.db, "Orders/" + this.userDbKey,),obj)
+           
+
+            
+          }
+        }
+      ]
+    });
+  
+    await alert.present();
   }
   reset(){
     this.orderForm.reset();

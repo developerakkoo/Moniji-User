@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { Auth } from '@angular/fire/auth';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -14,9 +16,14 @@ export class AppComponent {
     // { title: 'Spam', url: '/folder/Spam', icon: 'warning' },
   ];
   // public labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders'];
-  constructor() {}
+  constructor(private router: Router,
+              private auth: Auth) {
+                console.log(this.auth.currentUser?.uid);
+                
+              }
 
   logout(){
     
+    this.router.navigate(['login'])
   }
 }

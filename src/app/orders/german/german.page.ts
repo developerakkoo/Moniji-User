@@ -1,7 +1,13 @@
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { IonSelectCustomEvent } from '@ionic/core';
-
+import { Database } from '@angular/fire/database';
+import { DataService } from 'src/app/data.service';
+import { AlertController } from '@ionic/angular';
+import { increment, ref, set } from '@firebase/database';
+import * as  moment from 'moment';
+import { collection, Firestore } from '@angular/fire/firestore';
+import { addDoc, doc, setDoc } from '@firebase/firestore';
 @Component({
   selector: 'app-german',
   templateUrl: './german.page.html',
@@ -12,6 +18,7 @@ export class GermanPage implements OnInit {
   orderForm: FormGroup;
   type:string = "ground";
   diameter:number = 3;
+  todaysDate: any;
   diameterArray:number[] = [
     3,
     4,
@@ -29,29 +36,89 @@ export class GermanPage implements OnInit {
     305,310,315,320,325,330
   ];
   length:number = 50;
+
+  userDbKey!:string;
+  userId!:string;
   isLengthButtonActive:boolean = false;
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,
+              private db: Database,
+              private firstore: Firestore,
+              private data: DataService,
+              private alertController: AlertController) {
     this.orderForm = this.fb.group({
       type: [, [Validators.required]],
       diameter: [,[Validators.required]],
       length: [, [Validators.required]],
       quantity: [, [Validators.required]],
-      item: [],
-      smallDia: []
     })
    }
 
-  ngOnInit() {
-  }
+ async ngOnInit() {
+  this.userDbKey = await this.data.get("userKey");
+  this.userId = await this.data.get("userId");
+  console.log(`USer Database ref key ${this.userDbKey}`);
+  console.log(moment().format("YYYY/MM/DD"));
+  this.todaysDate = moment().format("YYYY/MM/DD");
+  
+    
+}
 
   onSubmit(){
     console.log(this.orderForm.value);
-    
+    this.presentAlertConfirm("Confirm", "", "Do you want to place the order", "Yes");
   }
   reset(){
     this.orderForm.reset();
   }
+  async presentAlertConfirm(header: string, handler:any, msg: string, buttonText: string) {
+    const alert = await this.alertController.create({
+      header: header,
+      message: msg,
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+            console.log('Confirm Cancel: blah');
+          }
+        }, {
+          text: buttonText,
+          handler: () =>{
+            console.log("Yes");
+            let obj = {
+              userKey: this.userDbKey,
+              userId: this.userId,
+              type: this.orderForm.value.type,
+              diameter: this.orderForm.value.diameter,
+              length: this.orderForm.value.length,
+              quantity: this.orderForm.value.quantity,
+              status: 1,
+              orderId: 0o000,
+              date: this.todaysDate,
+              make: "German"
 
+            }
+
+            addDoc(collection(this.firstore, `Orders`), obj)
+            .then((success) =>{
+              console.log(success);
+              
+            }).catch((error) =>{
+              console.log(error);
+              
+            })
+            // set(ref(this.db, "Orders/" + this.userDbKey,),obj)
+           
+
+            
+          }
+        }
+      ]
+    });
+  
+    await alert.present();
+  }
  
   typeEvent(ev: any){
     console.log(ev.detail.value);

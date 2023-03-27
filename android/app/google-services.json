@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "562323217909",
+    "firebase_url": "https://moniji-default-rtdb.firebaseio.com",
+    "project_id": "moniji",
+    "storage_bucket": "moniji.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:562323217909:android:0f9b2ac9471615600514bc",
+        "android_client_info": {
+          "package_name": "io.moniji.starter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "562323217909-vsu4jaes403k4hr7js3c1vprqvtad027.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCoO68-CFqupTMRftOFvyYwHxsMX1Q1cPc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "562323217909-vsu4jaes403k4hr7js3c1vprqvtad027.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

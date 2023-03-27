@@ -38,7 +38,12 @@ const routes: Routes = [
   {
     path: 'orders',
     loadChildren: () => import('./orders/orders.module').then( m => m.OrdersPageModule)
+  },
+  {
+    path: 'register-complete',
+    loadChildren: () => import('./register-complete/register-complete.module').then( m => m.RegisterCompletePageModule)
   }
+
 ];
 
 @NgModule({

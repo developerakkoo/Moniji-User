@@ -1,4 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { Auth } from '@angular/fire/auth';
+import { Firestore, getDocs, query, where } from '@angular/fire/firestore';
+import { collection } from '@firebase/firestore';
+import { LoadingController } from '@ionic/angular';
+import { DataService } from 'src/app/data.service';
+import { HandlerService } from 'src/app/handler.service';
 
 @Component({
   selector: 'app-yourorders',
@@ -7,21 +13,41 @@ import { Component, OnInit } from '@angular/core';
 })
 export class YourordersPage implements OnInit {
 
+  userId!: string;
+  userDBKey!: string;
+  orderRef!:any;
   order:any[] = [
-    {
-      orderId:1111,
-      image:"https://www.shutterstock.com/image-illustration/metal-rod-600w-321062312.jpg",
-      title: "German made",
-      price:12000,
-      status:"pending"
-    }
+   
   ]
-  constructor() { }
+  constructor(private firestore: Firestore,
+              private auth: Auth,
+              private loadingController: LoadingController,
+              private data: DataService,
+              private handler: HandlerService) {
+                this.orderRef = collection(this.firestore, "Orders");
+               }
 
-  ngOnInit() {
+ async ngOnInit() {
+  this.userId = await this.data.get("userId");
+  this.userDBKey = await this.data.get("userKey");
+  console.log(`USerId ${this.userId}`);
+  console.log(`User DB key ${this.userDBKey}`);
+  this.getUserOrders();
   }
 
-  delete(){
+  async getUserOrders(){
+    const q = query(this.orderRef, where("userId", "==", this.userId));
+
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      // doc.data() is never undefined for query doc snapshots
+      console.log(doc.id, " => ", doc.data());
+      this.order.push(doc.data())
+     
+    });
+  }
+  delete(item:any){
+    console.log(item);
     
   }
 
