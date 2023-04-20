@@ -42,7 +42,11 @@ const routes: Routes = [
   {
     path: 'register-complete',
     loadChildren: () => import('./register-complete/register-complete.module').then( m => m.RegisterCompletePageModule)
+  },  {
+    path: 'forgot-password',
+    loadChildren: () => import('./auth/forgot-password/forgot-password.module').then( m => m.ForgotPasswordPageModule)
   }
+
 
 ];
 

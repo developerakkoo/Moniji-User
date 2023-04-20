@@ -19,7 +19,8 @@
       <ion-label>
         <p> <strong>OrderId</strong> {{item.orderId}} </p>
         <p> <strong>Quantity</strong> {{item.quantity}} </p>
-        <p style="color: orange;"> <strong  *ngIf="item.status == 1">Status</strong> Pending </p>
+        <p *ngIf="item.isAccepted == false" style="color: orange;"> <strong  ></strong>Pending </p>
+        <p *ngIf="item.isAccepted == true" style="color: green;"> <strong  ></strong>Accepted </p>
         <!-- <p color="primary"> <strong *ngIf="item.status == 2">Status</strong> Accepted </p>
         <p color="tertiary"> <strong *ngIf="item.status == 3">Status</strong> Partial Complete </p>
         <p color="success"> <strong *ngIf="item.status == 4">Status</strong> Success </p>
@@ -27,6 +28,7 @@
         <p> <strong>Type</strong> {{item.type}} </p>
         <p> <strong>Length</strong> {{item.length}} </p>
         <p> <strong>Diameter</strong> {{item.diameter}} </p>
+        <p *ngIf="item.isAlternate"> <strong>Messsge: </strong> {{item.message}} </p>
       </ion-label>
       <!-- <ion-button (click)="delete(item)">
         <ion-icon slot="icon-only" name="trash"></ion-icon>

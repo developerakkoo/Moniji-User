@@ -5,6 +5,9 @@ import * as  moment from 'moment';
 import { DataService } from '../data.service';
 import { child, Database, getDatabase, ref } from '@angular/fire/database';
 import { get } from '@firebase/database';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.page.html',
@@ -20,14 +23,17 @@ export class ProfilePage implements OnInit {
 
   userObj!:any;
 
+  getUserSub!: Subscription;
+  updateUserSub!: Subscription;
+
   constructor(private fb: FormBuilder,
               private data: DataService,
               private db: Database,
+              private http: HttpClient,
               private handlerService: HandlerService) {
                 this.profileForm = this.fb.group({
                   name:[],
                   email:[],
-                  password:[],
                   address:[],
                   gst:[],
                   company:[],
@@ -38,13 +44,31 @@ export class ProfilePage implements OnInit {
 
               
   onSubmit(){
-    
+    this.handlerService.presentLoading("Updating user...")
+    this.updateUserSub = this.http.put(environment.API + `/user/${this.userId}`, {
+      name: this.profileForm.value.name,
+      email: this.profileForm.value.email,
+      address: this.profileForm.value.address,
+      gst: this.profileForm.value.gst,
+      company: this.profileForm.value.company,
+      mobileno: this.profileForm.value.mobile,
+      city: this.profileForm.value.city
+    }).subscribe({
+      next:(user) =>{
+        console.log(user);
+        this.handlerService.dismissLoading();
+
+      },
+      error: (error) =>{
+        console.log(error);
+        this.handlerService.dismissLoading();
+        
+      }
+    })
   }
 
   async ngOnInit() {
-    this.userDbKey = await this.data.get("userKey");
     this.userId = await this.data.get("userId");
-    console.log(`USer Database ref key ${this.userDbKey}`);
     console.log(moment().format("YYYY/MM/DD"));
     this.todaysDate = moment().format("YYYY/MM/DD");
     this.getUserDetails();
@@ -52,29 +76,36 @@ export class ProfilePage implements OnInit {
       
   }
 
+  IonViewDidLeave(){
+    this.getUserSub.unsubscribe();
+    this.updateUserSub.unsubscribe();
+
+  }
 
   async getUserDetails(){
-    const dbRef = ref(getDatabase());
+    this.handlerService.presentLoading("Getting user profile...");
+    this.getUserSub =  this.http.get(environment.API + `/user/${this.userId}`).subscribe({
+      next:(user:any) =>{
+        this.handlerService.dismissLoading();
+        console.log(user);
+        this.profileForm.setValue({
+          email: user['user']['email'],
+          name: user['user']['name'],
+          address: user['user']['address'],
+          gst: user['user']['gst'],
+          company: user['user']['company'],
+          mobile: user['user']['mobileno'],
+          city: user['user']['city']
+        })
+      },
 
-    get(child(dbRef, `Users/${this.userDbKey}`)).then((snapshot) => {
-      if (snapshot.exists()) {
-        console.log(snapshot.val());
-        this.userObj = snapshot.val();
-
-        this.profileForm.get("address")?.setValue(this.userObj['address']);
-        this.profileForm.get("name")?.setValue(this.userObj['name']);
-        this.profileForm.get("email")?.setValue(this.userObj['email']);
-        this.profileForm.get("gst")?.setValue(this.userObj['gst']);
-        this.profileForm.get("company")?.setValue(this.userObj['company']);
-        this.profileForm.get("city")?.setValue(this.userObj['city']);
-        this.profileForm.get("mobile")?.setValue(this.userObj['mobile']);
-
-      } else {
-        console.log("No data available");
+      error: (error) =>{
+        console.log(error);
+        this.handlerService.dismissLoading();
+        
       }
-    }).catch((error) => {
-      console.error(error);
-    });
+    })
+   
   }
 
 }
