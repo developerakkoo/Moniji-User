@@ -2,7 +2,7 @@
   <ion-toolbar>
     <ion-title>Completed Orders</ion-title>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="folder/Home"></ion-back-button>
+      <ion-back-button defaultHref="/folder/Home"></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -12,23 +12,23 @@
     <ion-list-header>
       <ion-label>All Completed Orders</ion-label>
     </ion-list-header>
-    <ion-item *ngFor="let item of order">
-      <ion-avatar slot="start">
+    <ion-item *ngFor="let item of order" detail (click)="openDetail(item._id)">
+      <!-- <ion-avatar slot="start">
         <img [src]="item.image" />
-      </ion-avatar>
+      </ion-avatar> -->
       <ion-label>
         <p> <strong>OrderId</strong> {{item.orderId}} </p>
-        <p> <strong>Quantity</strong> {{item.quantity}} </p>
-        <p *ngIf="item.isAccepted == false" style="color: orange;"> <strong  ></strong>Pending </p>
-        <p *ngIf="item.isAccepted == true" style="color: green;"> <strong  ></strong>Accepted </p>
+        <p> <strong>Date</strong> {{item.Date}}</p>
+        
+    
         <!-- <p color="primary"> <strong *ngIf="item.status == 2">Status</strong> Accepted </p>
         <p color="tertiary"> <strong *ngIf="item.status == 3">Status</strong> Partial Complete </p>
         <p color="success"> <strong *ngIf="item.status == 4">Status</strong> Success </p>
         <p color="danger"> <strong *ngIf="item.status == 5">Status</strong> Rejected </p> -->
-        <p> <strong>Type</strong> {{item.type}} </p>
+        <!-- <p> <strong>Type</strong> {{item.type}} </p>
         <p> <strong>Length</strong> {{item.length}} </p>
         <p> <strong>Diameter</strong> {{item.diameter}} </p>
-        <p *ngIf="item.isAlternate"> <strong>Messsge: </strong> {{item.message}} </p>
+        <p *ngIf="item.isAlternate"> <strong>Messsge: </strong> {{item.message}} </p> -->
       </ion-label>
       <!-- <ion-button (click)="delete(item)">
         <ion-icon slot="icon-only" name="trash"></ion-icon>

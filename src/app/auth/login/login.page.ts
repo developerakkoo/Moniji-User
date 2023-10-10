@@ -11,6 +11,7 @@ import { signInWithEmailAndPassword } from '@firebase/auth';
 import { Auth } from '@angular/fire/auth';
 import { Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
 
 @Component({
   selector: 'app-login',
@@ -31,6 +32,7 @@ getUserSub!: Subscription;
               private data: DataService,
               private db: Database,
               private auth: Auth,
+              private iab: InAppBrowser,
               private handlerService: HandlerService) { 
                 this.loginForm = this.fb.group({
                   email:[,[Validators.required, Validators.email]],
@@ -71,6 +73,10 @@ getUserSub!: Subscription;
   IonViewDidLeave(){
     this.loginSub.unsubscribe();
     this.getUserSub.unsubscribe();
+  }
+
+  openIAB(){
+    this.iab.create(environment.API + '/App/api/v1/user-forgot-password').show();
   }
   async onSubmit(){
     this.handlerService.presentLoading("Logging you in...");

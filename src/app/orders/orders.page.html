@@ -8,5 +8,15 @@
 </ion-header>
 
 <ion-content>
-
+<ion-list>
+  <ion-item *ngFor="let item of order">
+    <ion-label>
+      <p><strong>Make</strong> {{item.Make}} </p>
+      <p><strong>Length</strong> {{item.LengthInMm}} </p>
+      <p><strong>Diameter</strong> {{item.DiaInMm}} </p>
+      <p><strong>Type</strong> {{item.Type}} </p>
+      <p><strong>Quantity</strong> {{item.quantity}} </p>
+    </ion-label>
+  </ion-item>
+</ion-list>
 </ion-content>

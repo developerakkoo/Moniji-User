@@ -2,6 +2,9 @@ ion-menu-button {
   color: var(--ion-color-primary);
 }
 
+.my-pagination ::ng-deep .ngx-pagination .current {
+  background: red;
+}
 #container {
   text-align: center;
   position: absolute;

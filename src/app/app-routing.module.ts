@@ -36,15 +36,20 @@ const routes: Routes = [
     loadChildren: () => import('./profile/profile.module').then( m => m.ProfilePageModule)
   },
   {
-    path: 'orders',
+    path: 'orders/:id',
     loadChildren: () => import('./orders/orders.module').then( m => m.OrdersPageModule)
   },
   {
     path: 'register-complete',
     loadChildren: () => import('./register-complete/register-complete.module').then( m => m.RegisterCompletePageModule)
-  },  {
+  },
+  {
     path: 'forgot-password',
     loadChildren: () => import('./auth/forgot-password/forgot-password.module').then( m => m.ForgotPasswordPageModule)
+  },
+  {
+    path: 'cart',
+    loadChildren: () => import('./cart/cart.module').then( m => m.CartPageModule)
   }
 
 

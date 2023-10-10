@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Database } from '@angular/fire/database';
 import { addDoc, collection, Firestore } from '@angular/fire/firestore';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import * as  moment from 'moment';
 import { Subscription } from 'rxjs';
@@ -55,6 +56,7 @@ export class ChinaPage implements OnInit {
     private http: HttpClient,
     private handler: HandlerService,
     private firstore: Firestore,
+    private router: Router,
     private alertController: AlertController,
     private data: DataService,) {
     this.orderForm = this.fb.group({
@@ -120,6 +122,7 @@ export class ChinaPage implements OnInit {
               this.handler.dismissLoading();
               this.handler.hapticsImpactLight();
               this.handler.presentAlert("Success", "", "Your order is succesfully placed.", "Okay");
+              
               
             },
             error: (error) =>{

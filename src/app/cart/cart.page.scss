@@ -1,0 +1,263 @@
+.container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+
+ion-datetime{
+    background-color: #fff;
+}
+
+ion-modal{
+    // --background: rgba(44 ,39,45,0.2);
+        &::part(content){
+            backdrop-filter: blur(6px);
+        }
+}
+
+ion-button{
+    --border-radus:8px;
+
+}
+
+ 
+ion-modal{
+    --background: rgba(44,39,45,0.2);
+    &::part(content){
+        backdrop-filter: blur(6px);
+    }
+   .Content{
+        --background:transparent;
+        --padding-top:15vh;
+        --padding-start:10px;
+        --padding-end:10px;
+
+ion-datetime{
+    border-radius: 8px;
+}
+
+    }
+}
+.butn{    display: flex;
+    margin: auto;
+    justify-content: center;
+    font-size: 10px;
+    margin-top:5%;
+
+}
+.butn >button{
+    color: rgb(77, 76, 76);
+    // margin-right: 5px;
+    // padding: 7px 8px;
+    background: none;
+    border-radius: 5px;
+    border: 1px solid rgb(186, 186, 186);
+    margin-right: 6px;
+    padding: 6px 6px;
+    margin-bottom: 13px;
+    font-size: 8px;
+}
+
+.Milk{
+    // justify-content: space-around;
+    display: flex;
+    margin: auto;
+    justify-content: center;
+
+}
+.Milk > div{
+    justify-content: center;
+    border: 1px solid green;
+    border-radius: 5px;
+    color: green;
+    padding: 5px 10px;
+    font-size: 12px;
+}
+.Alternate{
+    margin-left: 10px;
+}
+
+.Btn{
+    padding: 7px 3px;
+    /* margin-left: -9px; */
+    border-radius: 5px;}
+
+
+    .Custom{
+justify-content: start;
+margin-top: 6%;
+    }
+    .Des{
+        line-height: 18px;
+        font-size: 9px;
+    }
+    
+
+   
+    ion-card{
+        ion-button{
+            --border-radius: 20px;
+        }
+    }
+
+    
+    
+    .Select {
+        display: flex;
+        margin: auto;
+        align-items: flex-end;
+        justify-content: center;
+        position: relative;
+    }
+    .Select > div{
+      
+        padding: 5px 10px;
+        font-size: 14px;
+    }
+
+    // .Select2{
+    //     display: flex;
+    //     margin: auto;
+    //     margin-top: 2%;
+    //     div{
+    //         padding: 5px 10px;
+    //         font-size: 13px;
+        
+    //     }
+
+    // }
+    .qty-selector {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #28ba62;
+        margin-top: 10px;
+        
+        border-radius: 19px;
+        height: 33px;
+        
+    
+
+        ion-button {
+            --color: #ffffff;
+            font-size: 19px;
+            margin-left: 2px;
+            margin-right: 2px;
+            
+        }
+
+        ion-label {
+            color: #faf5f5 !important;
+            font-size: 12px;
+        }
+        .logo-image {
+            box-shadow: 1px 5px 12px rgba($color: #6e6d6d, $alpha: 1) !important;
+        }
+        
+    }
+
+    .card-content-md h3, .card-content-md h4, .card-content-md h5, .card-content-md h6 {
+        margin-left: 0;
+        margin-right: 0;
+        margin-top: 2px;
+        margin-bottom: 5px;
+        font-size: 14px;
+        font-weight: normal;
+        line-height: 21px;
+    }
+  
+
+    .mystyle {
+  width: 100%;
+  padding: 25px;
+  background-color: coral;
+  color: white;
+  font-size: 25px;
+  box-sizing: border-box;
+}   
+  .wrapper {
+    color: #fff;
+    // width: 81%;
+    // height: 50px;
+    padding: 8px 0px;
+    background-color: #28ba62;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    border-radius: 10px;
+    
+    button{
+        background-color: #28ba62;
+    }
+  }
+  .plusminus {
+    padding: 0p14px;
+   
+    border: none;
+    font-size: 20px;
+    color: #ffffff;
+  }
+  
+  .num {
+    
+    border: none;
+    font-size: 20px;
+    background:none;
+    color: #fff;
+    margin-left: 6px;
+  }
+.buttuns{
+    background-color: #28ba62;
+    justify-content: center;
+    display: flex;
+    padding: 8px 6px;
+    border-radius: 11px;
+    // padding: 9px 23px;
+
+    button{
+        background: none;
+    }
+}
+
+.foot{
+    justify-content: space-around;
+    border-radius: 5px;
+    color: #fff !important;
+    // align-items: center;
+    background-color:  #28ba62;
+    padding: 0px 1px;
+    width: 94%;
+    margin: 5% 3% 6% 3%;
+
+   
+}
+  .foot{
+        display: flex;
+        color: #ffff;
+        border-radius: 7px;
+        padding: 7px
+      }
+      
+      .foot > div p {
+        font-size: 11px;
+        // padding: 10px;
+        margin: 0;
+       
+       
+      }
+      ion-footer{
+        --background-color:red
+
+      }
+      .myColor {
+        background-color: rgb(255, 255, 255);
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+        color: white;
+      }
+     
+ 

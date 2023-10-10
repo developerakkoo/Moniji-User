@@ -4,7 +4,12 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>{{ folder }}</ion-title>
+    <ion-button fill="clear" slot="end" (click)="openCart()">
+      <ion-badge color="primary" mode="ios">{{cart.length}}</ion-badge>
+      <ion-icon slot="icon-only" name="cart"></ion-icon>
+    </ion-button>
   </ion-toolbar>
+  <input style="width: 100%; height: 40px;" type="text" [(ngModel)]="productFilter.PartNo" placeholder="Search By Part No">
 </ion-header>
 
 <ion-content [fullscreen]="true" class="ion-no-margin">
@@ -15,34 +20,22 @@
   </ion-header>
 
 
-  <ion-list-header>
-    <ion-label>Select a Make to place Order</ion-label>
-  </ion-list-header>
-  <ion-card class="card">
-    <ion-card-header>
-      <ion-card-subtitle>German Make</ion-card-subtitle>
-    </ion-card-header>
-    <ion-card-content>
-      <ion-img src="https://www.shutterstock.com/image-illustration/metal-rod-600w-321062312.jpg"></ion-img>
+ 
 
-      <ion-button expand="block"  (click)="makeSelectHandler('german')">
-        <ion-icon slot="end" name="arrow-forward"></ion-icon>
-          Continue
-      </ion-button>
-    </ion-card-content>
-  </ion-card>
-
-  <ion-card class="card">
-    <ion-card-header>
-      <ion-card-subtitle>China Make</ion-card-subtitle>
-    </ion-card-header>
-    <ion-card-content>
-      <ion-img src="https://www.shutterstock.com/image-illustration/metal-rod-600w-321062312.jpg"></ion-img>
-      <ion-button expand="block" (click)="makeSelectHandler('china')">
-        <ion-icon slot="end" name="arrow-forward"></ion-icon>
-        Continue
-      </ion-button>
-    </ion-card-content>
-  </ion-card>
-
+<ion-item *ngFor="let item of product | filterBy: productFilter | paginate: { itemsPerPage: 20, id:'server',currentPage: currentPAge,totalItems:totalPage }">
+  <ion-label>
+    <p> <strong>Part no</strong>  {{item.PartNo}} </p>
+    <p> <strong>Make </strong>{{item.Make}} </p>
+    <p> <strong>Type </strong>{{item.Type}} </p>
+  </ion-label>
+  <input style="width: 50px; height: 40px;" type="number" min="1" value="1" placeholder="amount" #amount  name="" id="">
+  <ion-button (click)="addToCart(item, amount.value)" expand="block" fill="clear" shape="round">
+   ADD
+  </ion-button>
+</ion-item>
 </ion-content>
+<ion-footer>
+  <ion-toolbar>
+    <pagination-controls id="server"  (pageChange)="currentPAge = $event"></pagination-controls>
+  </ion-toolbar>
+</ion-footer>

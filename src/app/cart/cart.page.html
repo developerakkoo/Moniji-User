@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>My Cart</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/folder/Home"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-text color="dark" class="ion-text-center" *ngIf="items.length == 0">
+    <h4>No Items In Cart!</h4>
+  </ion-text>
+  <ion-list *ngIf="items.length > 0">
+    <ion-item *ngFor="let item of items">
+      <ion-label> {{item.PartNo}} </ion-label>
+       
+
+        <div class="cart-items" class="ion-margin-end">
+          <div class="item-info" mode="ios" >
+            <div class="qty-selector">
+              <ion-button fill="clear" (click)="decreaseCartItem(item)"
+                >-</ion-button
+              >
+              <ion-label> {{item.quantity}} </ion-label>
+              <ion-button fill="clear" (click)="increaseCartItem(item)"
+                >+</ion-button
+              >
+            </div>
+          </div>
+        </div>
+    </ion-item>
+  </ion-list>
+</ion-content>
+<ion-footer>
+  <ion-toolbar>
+    <ion-button [disabled]="items.length == 0" (click)="placeOrder()" expand="block" fill="clear" shape="round">
+      Place Order
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>
