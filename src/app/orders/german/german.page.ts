@@ -8,6 +8,10 @@ import { increment, ref, set } from '@firebase/database';
 import * as  moment from 'moment';
 import { collection, Firestore } from '@angular/fire/firestore';
 import { addDoc, doc, setDoc } from '@firebase/firestore';
+import { Subscription } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
+import { HandlerService } from 'src/app/handler.service';
 @Component({
   selector: 'app-german',
   templateUrl: './german.page.html',
@@ -37,13 +41,16 @@ export class GermanPage implements OnInit {
   ];
   length:number = 50;
 
-  userDbKey!:string;
   userId!:string;
   isLengthButtonActive:boolean = false;
+
+  gerSub!: Subscription;
   constructor(private fb: FormBuilder,
               private db: Database,
               private firstore: Firestore,
               private data: DataService,
+              private http: HttpClient,
+              private handler: HandlerService,
               private alertController: AlertController) {
     this.orderForm = this.fb.group({
       type: [, [Validators.required]],
@@ -54,9 +61,7 @@ export class GermanPage implements OnInit {
    }
 
  async ngOnInit() {
-  this.userDbKey = await this.data.get("userKey");
   this.userId = await this.data.get("userId");
-  console.log(`USer Database ref key ${this.userDbKey}`);
   console.log(moment().format("YYYY/MM/DD"));
   this.todaysDate = moment().format("YYYY/MM/DD");
   
@@ -87,29 +92,35 @@ export class GermanPage implements OnInit {
           handler: () =>{
             console.log("Yes");
             let obj = {
-              userKey: this.userDbKey,
               userId: this.userId,
               type: this.orderForm.value.type,
               diameter: this.orderForm.value.diameter,
               length: this.orderForm.value.length,
               quantity: this.orderForm.value.quantity,
               status: 1,
-              orderId: 0o000,
-              date: this.todaysDate,
               make: "German"
 
             }
+            this.handler.presentLoading("Placing order...");
 
-            addDoc(collection(this.firstore, `Orders`), obj)
-            .then((success) =>{
-              console.log(success);
+           console.log(obj);
+           this.gerSub = this.http.post(environment.API + `/order`, obj)
+           .subscribe({
+            next: (order:any) =>{
+              console.log(order);
+              this.handler.dismissLoading();
+              this.handler.hapticsImpactLight();
+              this.handler.presentAlert("Success", "", "Your order is succesfully placed.", "Okay");
               
-            }).catch((error) =>{
+            },
+            error: (error) =>{
               console.log(error);
+              this.handler.dismissLoading();
+              this.handler.hapticsImpactLight();
+              this.handler.presentAlert("Error", "", "Please try again!", "Okay");
               
-            })
-            // set(ref(this.db, "Orders/" + this.userDbKey,),obj)
-           
+            }
+           })
 
             
           }
@@ -125,13 +136,13 @@ export class GermanPage implements OnInit {
     let type = ev.detail.value;
     if(type == "ground"){
       console.log("Type ground");
-      this.isLengthButtonActive = false;
+      // this.isLengthButtonActive = false;
       
     }
     else if(type == "unground"){
       console.log("Type unground set length to 330");
-      this.length = 330;
-      this.isLengthButtonActive = true;
+      // this.length = 330;
+      // this.isLengthButtonActive = true;
       
     }
 

@@ -9,6 +9,9 @@ import { Database, onValue, ref } from '@angular/fire/database';
 import { getDatabase } from '@firebase/database';
 import { signInWithEmailAndPassword } from '@firebase/auth';
 import { Auth } from '@angular/fire/auth';
+import { Subscription } from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
 
 @Component({
   selector: 'app-login',
@@ -20,12 +23,16 @@ loginForm!: FormGroup;
 isShowText: boolean = false;
 
 dbkey!: any;
+
+loginSub!: Subscription;
+getUserSub!: Subscription;
   constructor(private fb: FormBuilder,
               private router: Router,
               private http: HttpClient,
               private data: DataService,
               private db: Database,
               private auth: Auth,
+              private iab: InAppBrowser,
               private handlerService: HandlerService) { 
                 this.loginForm = this.fb.group({
                   email:[,[Validators.required, Validators.email]],
@@ -63,22 +70,74 @@ dbkey!: any;
   }
 
 
+  IonViewDidLeave(){
+    this.loginSub.unsubscribe();
+    this.getUserSub.unsubscribe();
+  }
+
+  openIAB(){
+    this.iab.create(environment.API + '/App/api/v1/user-forgot-password').show();
+  }
   async onSubmit(){
     this.handlerService.presentLoading("Logging you in...");
     console.log(this.loginForm.value);
-    signInWithEmailAndPassword(this.auth,this.loginForm.value.email, this.loginForm.value.password)
-    .then(async (success) =>{
-      let userID = success.user.uid;
-      await this.data.set("userId", userID);
-      this.handlerService.dismissLoading();
-      this.handlerService.hapticsImpactMedium();
-      this.router.navigate(['folder', 'Home']);
-    }).catch((error) => {
-      this.handlerService.dismissLoading();
-      this.handlerService.hapticsImpactMedium();
-    })
 
+    let body = {
+      email: this.loginForm.value.email,
+      password: this.loginForm.value.password
+    }
+    this.loginSub = this.http.post(environment.API + "/user/login", body)
+    .subscribe(async(user:any) =>{
+      console.log(user);
+    //  this.handlerService.dismissLoading();
+      // if(user["message"] == "Not verified"){
+      //   this.handlerService.dismissLoading();
+      // }
+      this.checkUserForLogin(user["userId"]); 
+      
+    }, async (error) =>{
+      console.log(error.status);
+      console.log(error);
+      this.handlerService.presentAlert("ERROR", error.message, "", "Okay");
+      this.handlerService.dismissLoading();
+      this.handlerService.hapticsImpactMedium();
+      
+    })
+   
     
 
+  }
+
+  async checkUserForLogin(userId: any){
+    console.log(userId);
+
+    this.getUserSub = this.http.get(environment.API +`/user/${userId}`).subscribe({
+      next: async (user:any) =>{
+        console.log(user);
+        console.log(user['user']['isActive']);
+        
+        if(user['user']['isActive'] === false){
+          this.handlerService.dismissLoading();
+          this.handlerService.hapticsImpactMedium();
+          this.handlerService.presentAlert("Not Verified", "Admin has not accepted your request.", "Please wait 2 days for verification", "Okay");
+          
+          
+        }else if(user['user']['isActive'] === true) {
+          this.handlerService.dismissLoading();
+          this.handlerService.hapticsImpactMedium();
+          await this.data.set("userId",userId);
+          this.router.navigate(['folder', 'Home']);
+        }
+
+
+      }, 
+      error: (error) =>{
+        console.log(error);
+        this.handlerService.dismissLoading();
+          this.handlerService.hapticsImpactMedium();
+        
+      }
+    })
+    
   }
 }

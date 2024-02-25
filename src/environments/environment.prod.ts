@@ -1,4 +1,7 @@
 export const environment = {
+  API : "https://www.moniji.online",
+
+
   firebase: {
     projectId: 'moniji',
     appId: '1:562323217909:web:d7d6266459d8e9520514bc',

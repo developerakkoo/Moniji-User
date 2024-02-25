@@ -1,10 +1,15 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Database } from '@angular/fire/database';
 import { addDoc, collection, Firestore } from '@angular/fire/firestore';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import * as  moment from 'moment';
+import { Subscription } from 'rxjs';
 import { DataService } from 'src/app/data.service';
+import { HandlerService } from 'src/app/handler.service';
+import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-china',
   templateUrl: './china.page.html',
@@ -44,9 +49,14 @@ export class ChinaPage implements OnInit {
   userId!:string;
   length:number = 50;
   isSmallDiaButtonActive:boolean = false;
+
+  chinaSub!: Subscription;
   constructor(private fb: FormBuilder,
     private db: Database,
+    private http: HttpClient,
+    private handler: HandlerService,
     private firstore: Firestore,
+    private router: Router,
     private alertController: AlertController,
     private data: DataService,) {
     this.orderForm = this.fb.group({
@@ -60,9 +70,7 @@ export class ChinaPage implements OnInit {
    }
 
    async ngOnInit() {
-    this.userDbKey = await this.data.get("userKey");
     this.userId = await this.data.get("userId");
-    console.log(`USer Database ref key ${this.userDbKey}`);
     console.log(moment().format("YYYY/MM/DD"));
     this.todaysDate = moment().format("YYYY/MM/DD");
     
@@ -107,16 +115,24 @@ export class ChinaPage implements OnInit {
 
             }
 
-            addDoc(collection(this.firstore, `Orders`), obj)
-            .then((success) =>{
-              console.log(success);
+            this.chinaSub = this.http.post(environment.API + `/order`, obj)
+           .subscribe({
+            next: (order:any) =>{
+              console.log(order);
+              this.handler.dismissLoading();
+              this.handler.hapticsImpactLight();
+              this.handler.presentAlert("Success", "", "Your order is succesfully placed.", "Okay");
               
-            }).catch((error) =>{
+              
+            },
+            error: (error) =>{
               console.log(error);
+              this.handler.dismissLoading();
+              this.handler.hapticsImpactLight();
+              this.handler.presentAlert("Error", "", "Please try again!", "Okay");
               
-            })
-            // set(ref(this.db, "Orders/" + this.userDbKey,),obj)
-           
+            }
+           })
 
             
           }

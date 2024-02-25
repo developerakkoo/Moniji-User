@@ -1,10 +1,15 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Auth } from '@angular/fire/auth';
 import { Firestore, getDocs, query, where } from '@angular/fire/firestore';
+import { Router } from '@angular/router';
 import { collection } from '@firebase/firestore';
 import { LoadingController } from '@ionic/angular';
+import { Socket } from 'ngx-socket-io';
+import { Subscription } from 'rxjs';
 import { DataService } from 'src/app/data.service';
 import { HandlerService } from 'src/app/handler.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-yourorders',
@@ -19,32 +24,60 @@ export class YourordersPage implements OnInit {
   order:any[] = [
    
   ]
+
+  orderSub!: Subscription;
   constructor(private firestore: Firestore,
               private auth: Auth,
               private loadingController: LoadingController,
               private data: DataService,
+              private io: Socket,
+              private router: Router,
+              private http: HttpClient,
               private handler: HandlerService) {
-                this.orderRef = collection(this.firestore, "Orders");
+                this.io.connect();
+
+                this.io.on("get:order", (order:any) =>{
+                  console.log(order);
+                  console.log("get order event");
+                  this.order = order;
+                  
+                })
                }
 
  async ngOnInit() {
   this.userId = await this.data.get("userId");
-  this.userDBKey = await this.data.get("userKey");
   console.log(`USerId ${this.userId}`);
-  console.log(`User DB key ${this.userDBKey}`);
   this.getUserOrders();
   }
 
   async getUserOrders(){
-    const q = query(this.orderRef, where("userId", "==", this.userId));
+    this.presentLoading();
+   this.orderSub = this.http.get(environment.API +`/order/user/${this.userId}`)
+   .subscribe({
+    next: (order:any) =>{
+      console.log(order);
+      this.order = order['order'];
+      this.loadingController.dismiss();
+    },
+    error: (error) =>{
+      console.log(error);
+      this.loadingController.dismiss();
+      
+    }
+   })
+  }
 
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => {
-      // doc.data() is never undefined for query doc snapshots
-      console.log(doc.id, " => ", doc.data());
-      this.order.push(doc.data())
-     
+  async presentLoading() {
+    const loading = await this.loadingController.create({
+      message: 'Loading...',
     });
+    await loading.present();
+  }
+
+  openDetail(id:any){
+    console.log(id);
+    this.router.navigate(['orders', id]);
+    
   }
   delete(item:any){
     console.log(item);
